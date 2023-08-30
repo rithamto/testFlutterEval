@@ -1,12 +1,10 @@
-// ignore_for_file: must_be_immutable, override_on_non_overriding_member
+// ignore_for_file: must_be_immutable, override_on_non_overriding_member, depend_on_referenced_packages
 
 import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_eval/flutter_eval.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:testfluttereval/cubit/logicCubit.dart';
-import 'package:testfluttereval/data.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:testfluttereval/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -22,7 +20,7 @@ void main() async {
 }
 
 class EvalExample extends StatefulWidget {
-  EvalExample({Key? key}) : super(key: key);
+  const EvalExample({Key? key}) : super(key: key);
 
   static MultiBlocProvider provider() {
     return MultiBlocProvider(
@@ -30,7 +28,7 @@ class EvalExample extends StatefulWidget {
         BlocProvider<LogicCubit>(
             create: (BuildContext context) => LogicCubit()),
       ],
-      child: EvalExample(),
+      child: const EvalExample(),
     );
   }
 
@@ -45,6 +43,86 @@ class EvalExampleSate extends State<EvalExample> with after_layout.AfterLayoutMi
     context.read<LogicCubit>().getData();
   }
 
+  Map<String, Map<String, String>> test = {
+        'testfluttereval': {
+          'global_colors.dart': '''
+            import 'package:flutter/material.dart';
+
+            class GlobalColors {
+              static const Color bgColor = Color(0xfff1f3f5);
+              static const Color debtColor = Color(0xff9f1e1e);
+            }
+          ''',
+          'main.dart': '''
+              import 'package:flutter/material.dart';
+              import 'package:testfluttereval/global_colors.dart';
+              
+              class MyApp extends StatelessWidget {
+                const MyApp({super.key});
+
+                // This widget is the root of your application.
+                @override
+                Widget build(BuildContext context) {
+                  return MaterialApp(
+                    title: 'flutter_eval demo',
+                    home: const MyHomePage(title: 'flutter_eval demo home page'),
+                  );
+                }
+              }
+
+              class MyHomePage extends StatefulWidget {
+                const MyHomePage({Key? key, required this.title}) : super(key: key);
+
+                final String title;
+
+                @override
+                State<MyHomePage> createState() => _MyHomePageState();
+              }
+
+              class _MyHomePageState extends State<MyHomePage> {
+                _MyHomePageState();
+                int _counter = 0;
+
+                void _incrementCounter() {
+                  setState(() {
+                    _counter++;
+                  });
+                }
+
+                @override
+                Widget build(BuildContext context) {
+                  return Scaffold(
+                    appBar: AppBar(
+                      //backgroundColor: GlobalColors.bgColor,
+                      title: Text(widget.title),
+                    ),
+                    body: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          const Text(
+                            'You have pushed the button this many times:',
+                          ),
+                          Text(
+                            '\$_counter',
+                            style: Theme.of(context).textTheme.headline4,
+                          ),
+                        ],
+                      )
+                    ),
+                    floatingActionButton: FloatingActionButton(
+                      onPressed: _incrementCounter,
+                      tooltip: 'Increment',
+                      child: Icon(Icons.add),
+                    ),
+                  );
+                }
+              }
+            '''
+        }
+      };
+
   // @override
   // void initState() {   
   //   context.read<LogicCubit>().getData();
@@ -55,9 +133,9 @@ class EvalExampleSate extends State<EvalExample> with after_layout.AfterLayoutMi
   Widget build(BuildContext context) {
     return BlocBuilder<LogicCubit, MainState>(
       builder: (BuildContext context, state) { 
-        final package = state.data!.code;
+        final package = state.data!.code ?? test;
         return  EvalWidget(
-          packages: package!,
+          packages: package,
           assetPath: 'assets/program.evc',
           library: 'package:testfluttereval/main.dart',
           function: 'MyApp.',
