@@ -1,7 +1,9 @@
 // ignore_for_file: must_be_immutable, override_on_non_overriding_member, depend_on_referenced_packages
 
 import 'dart:async';
+import 'dart:io';
 
+import 'package:dart_eval/dart_eval.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_eval/flutter_eval.dart';
 import 'package:testfluttereval/cubit/logicCubit.dart';
@@ -10,13 +12,12 @@ import 'package:testfluttereval/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:after_layout/after_layout.dart' as after_layout;
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp( EvalExample.provider());
+  runApp(EvalExample.provider());
 }
 
 class EvalExample extends StatefulWidget {
@@ -34,26 +35,53 @@ class EvalExample extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() => EvalExampleSate();
-
 }
-class EvalExampleSate extends State<EvalExample> with after_layout.AfterLayoutMixin{
+
+class EvalExampleSate extends State<EvalExample>
+    with after_layout.AfterLayoutMixin {
+  late Runtime runtime;
+
+  // @override
+  // void initState() {
+  //   final compiler = Compiler();
+  //   compiler.addPlugin(flutterEvalPlugin);
+  //   final program = compiler.compile(test);
+  //   final file = File('haiz.evc');
+  //   file.writeAsBytesSync(program.write());
+
+  //   runtime = Runtime.ofProgram(program);
+  //   runtime.addPlugin(flutterEvalPlugin);
+  //   runtime.setup();
+  //   super.initState();
+  // }
 
   @override
   FutureOr<void> afterFirstLayout(BuildContext context) {
-    context.read<LogicCubit>().getData();
+    // context.read<LogicCubit>().getData1();
+    // final compiler = Compiler();
+    // compiler.addPlugin(flutterEvalPlugin);
+    // final program = compiler.compile(test);
+    // final file = File('assets/program.evc');
+    // file.writeAsBytesSync(program.write());
+    // print('Wrote out.evc to: ' + file.path);
+    // runtime = Runtime.ofProgram(program);
+    // runtime.addPlugin(flutterEvalPlugin);
+    // runtime.setup();
   }
 
+
   Map<String, Map<String, String>> test = {
-        'testfluttereval': {
-          'global_colors.dart': '''
+    'testfluttereval': {
+      'global_colors.dart': '''
             import 'package:flutter/material.dart';
 
             class GlobalColors {
-              static const Color bgColor = Color(0xfff1f3f5);
+              static const Color bgColor = Color(0xfff1f2f0);
               static const Color debtColor = Color(0xff9f1e1e);
+              static const Color hi = Color(0xff00aed0);
             }
           ''',
-          'main.dart': '''
+      'main.dart': '''
               import 'package:flutter/material.dart';
               import 'package:testfluttereval/global_colors.dart';
               
@@ -93,7 +121,7 @@ class EvalExampleSate extends State<EvalExample> with after_layout.AfterLayoutMi
                 Widget build(BuildContext context) {
                   return Scaffold(
                     appBar: AppBar(
-                      //backgroundColor: GlobalColors.bgColor,
+                      backgroundColor: GlobalColors.debtColor,
                       title: Text(widget.title),
                     ),
                     body: Center(
@@ -120,28 +148,33 @@ class EvalExampleSate extends State<EvalExample> with after_layout.AfterLayoutMi
                 }
               }
             '''
-        }
-      };
-
-  // @override
-  // void initState() {   
-  //   context.read<LogicCubit>().getData();
-  //   super.initState();
-  // }
+    }
+  };
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<LogicCubit, MainState>(
-      builder: (BuildContext context, state) { 
-        final package = state.data!.code ?? test;
-        return  EvalWidget(
-          packages: package,
-          assetPath: 'assets/program.evc',
-          library: 'package:testfluttereval/main.dart',
-          function: 'MyApp.',
-          args: const [null],
-        );
-      },
-    );
-  }  
+    // return (runtime.executeLib('package:example/main.dart', 'HomePage.', []));
+    return RuntimeWidget(
+        uri: Uri.parse('https://storage.googleapis.com/eval-files/update.evc'),
+        library: 'package:testfluttereval/main.dart',
+        function: 'MyApp.',
+        args: []
+      );
+  }
+
+  // @override
+  // Widget build(BuildContext context) {
+  //   return BlocBuilder<LogicCubit, MainState>(
+  //     builder: (BuildContext context, state) {
+  //       final package = state.data?.code ?? test;
+  //       return EvalWidget(
+  //         packages: package,
+  //         assetPath: 'assets/program.evc',
+  //         library: 'package:testfluttereval/main.dart',
+  //         function: 'MyApp.',
+  //         args: const [null],
+  //       );
+  //     },
+  //   );
+  // }
 }

@@ -93,13 +93,11 @@ class __$$_MainStateDataCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_MainStateData implements _MainStateData {
-  const _$_MainStateData(
-      {final Map<String, Map<String, String>>? code = const {}})
+  const _$_MainStateData({final Map<String, Map<String, String>>? code})
       : _code = code;
 
   final Map<String, Map<String, String>>? _code;
   @override
-  @JsonKey()
   Map<String, Map<String, String>>? get code {
     final value = _code;
     if (value == null) return null;

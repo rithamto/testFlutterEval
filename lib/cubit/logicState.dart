@@ -1,11 +1,9 @@
-// ignore_for_file: file_names
-
 part of 'logicCubit.dart';
 
 @freezed
 class MainStateData with _$MainStateData {
   const factory MainStateData({
-    @Default({}) Map<String, Map<String, String>>? code,
+    Map<String, Map<String, String>>? code,
   }) = _MainStateData;
 }
 

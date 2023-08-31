@@ -11,13 +11,19 @@ part 'logicCubit.freezed.dart';
 class LogicCubit extends Cubit<MainState> {
   LogicCubit() : super(const MainState.initial(data: MainStateData()));
 
-  Stream<void> getData() async*{
+  void getData() async{
     final snapshot = FirebaseFirestore.instance.collection('item').doc('p1C24c8TICNOWxFsLA7Q');
     snapshot.snapshots().listen((event) {
       var data = event.data();
-      
-      Data map = Data.fromMap(data!);
+      Data map = Data.fromMap(data ?? {});
       emit(MainState.getMenu(data: state.data?.copyWith(code: map.code)));
     });
+  }
+
+  Future<void> getData1() async{
+    final snapshot = await FirebaseFirestore.instance.collection('item').doc('p1C24c8TICNOWxFsLA7Q').get();
+    var data = snapshot.data();
+    Data map = Data.fromMap(data ?? {});
+    emit(MainState.getMenu(data: state.data?.copyWith(code: map.code)));
   }
 }
