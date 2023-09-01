@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dart_eval/dart_eval.dart';
+import 'package:dart_eval/stdlib/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_eval/flutter_eval.dart';
 import 'package:testfluttereval/cubit/logicCubit.dart';
@@ -34,39 +35,15 @@ class EvalExample extends StatefulWidget {
   }
 
   @override
-  State<StatefulWidget> createState() => EvalExampleSate();
+  State<EvalExample> createState() => EvalExampleSate();
 }
 
 class EvalExampleSate extends State<EvalExample>
     with after_layout.AfterLayoutMixin {
-  late Runtime runtime;
-
-  // @override
-  // void initState() {
-  //   final compiler = Compiler();
-  //   compiler.addPlugin(flutterEvalPlugin);
-  //   final program = compiler.compile(test);
-  //   final file = File('haiz.evc');
-  //   file.writeAsBytesSync(program.write());
-
-  //   runtime = Runtime.ofProgram(program);
-  //   runtime.addPlugin(flutterEvalPlugin);
-  //   runtime.setup();
-  //   super.initState();
-  // }
 
   @override
   FutureOr<void> afterFirstLayout(BuildContext context) {
-    // context.read<LogicCubit>().getData1();
-    // final compiler = Compiler();
-    // compiler.addPlugin(flutterEvalPlugin);
-    // final program = compiler.compile(test);
-    // final file = File('assets/program.evc');
-    // file.writeAsBytesSync(program.write());
-    // print('Wrote out.evc to: ' + file.path);
-    // runtime = Runtime.ofProgram(program);
-    // runtime.addPlugin(flutterEvalPlugin);
-    // runtime.setup();
+    context.read<LogicCubit>().getData();
   }
 
 
@@ -153,28 +130,18 @@ class EvalExampleSate extends State<EvalExample>
 
   @override
   Widget build(BuildContext context) {
-    // return (runtime.executeLib('package:example/main.dart', 'HomePage.', []));
-    return RuntimeWidget(
-        uri: Uri.parse('https://storage.googleapis.com/eval-files/update.evc'),
-        library: 'package:testfluttereval/main.dart',
-        function: 'MyApp.',
-        args: []
-      );
+    return BlocBuilder<LogicCubit,MainState>(
+      builder: (context, state) {
+        final url = state.data?.code ?? "";
+        return EvalWidget(
+          uri: Uri.parse(url), 
+          function: 'Home.', 
+          library: 'package:miniapp/miniapp.dart',
+          args: [null], 
+          assetPath: '', 
+          packages: {},
+        );
+      },  
+    );
   }
-
-  // @override
-  // Widget build(BuildContext context) {
-  //   return BlocBuilder<LogicCubit, MainState>(
-  //     builder: (BuildContext context, state) {
-  //       final package = state.data?.code ?? test;
-  //       return EvalWidget(
-  //         packages: package,
-  //         assetPath: 'assets/program.evc',
-  //         library: 'package:testfluttereval/main.dart',
-  //         function: 'MyApp.',
-  //         args: const [null],
-  //       );
-  //     },
-  //   );
-  // }
 }

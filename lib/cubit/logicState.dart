@@ -3,7 +3,7 @@ part of 'logicCubit.dart';
 @freezed
 class MainStateData with _$MainStateData {
   const factory MainStateData({
-    Map<String, Map<String, String>>? code,
+    String? code,
   }) = _MainStateData;
 }
 

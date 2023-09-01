@@ -19,11 +19,4 @@ class LogicCubit extends Cubit<MainState> {
       emit(MainState.getMenu(data: state.data?.copyWith(code: map.code)));
     });
   }
-
-  Future<void> getData1() async{
-    final snapshot = await FirebaseFirestore.instance.collection('item').doc('p1C24c8TICNOWxFsLA7Q').get();
-    var data = snapshot.data();
-    Data map = Data.fromMap(data ?? {});
-    emit(MainState.getMenu(data: state.data?.copyWith(code: map.code)));
-  }
 }

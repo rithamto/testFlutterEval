@@ -16,8 +16,7 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$MainStateData {
-  Map<String, Map<String, String>>? get code =>
-      throw _privateConstructorUsedError;
+  String? get code => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $MainStateDataCopyWith<MainStateData> get copyWith =>
@@ -30,7 +29,7 @@ abstract class $MainStateDataCopyWith<$Res> {
           MainStateData value, $Res Function(MainStateData) then) =
       _$MainStateDataCopyWithImpl<$Res, MainStateData>;
   @useResult
-  $Res call({Map<String, Map<String, String>>? code});
+  $Res call({String? code});
 }
 
 /// @nodoc
@@ -52,7 +51,7 @@ class _$MainStateDataCopyWithImpl<$Res, $Val extends MainStateData>
       code: freezed == code
           ? _value.code
           : code // ignore: cast_nullable_to_non_nullable
-              as Map<String, Map<String, String>>?,
+              as String?,
     ) as $Val);
   }
 }
@@ -65,7 +64,7 @@ abstract class _$$_MainStateDataCopyWith<$Res>
       __$$_MainStateDataCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({Map<String, Map<String, String>>? code});
+  $Res call({String? code});
 }
 
 /// @nodoc
@@ -83,9 +82,9 @@ class __$$_MainStateDataCopyWithImpl<$Res>
   }) {
     return _then(_$_MainStateData(
       code: freezed == code
-          ? _value._code
+          ? _value.code
           : code // ignore: cast_nullable_to_non_nullable
-              as Map<String, Map<String, String>>?,
+              as String?,
     ));
   }
 }
@@ -93,18 +92,10 @@ class __$$_MainStateDataCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_MainStateData implements _MainStateData {
-  const _$_MainStateData({final Map<String, Map<String, String>>? code})
-      : _code = code;
+  const _$_MainStateData({this.code});
 
-  final Map<String, Map<String, String>>? _code;
   @override
-  Map<String, Map<String, String>>? get code {
-    final value = _code;
-    if (value == null) return null;
-    if (_code is EqualUnmodifiableMapView) return _code;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableMapView(value);
-  }
+  final String? code;
 
   @override
   String toString() {
@@ -116,12 +107,11 @@ class _$_MainStateData implements _MainStateData {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_MainStateData &&
-            const DeepCollectionEquality().equals(other._code, _code));
+            (identical(other.code, code) || other.code == code));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(_code));
+  int get hashCode => Object.hash(runtimeType, code);
 
   @JsonKey(ignore: true)
   @override
@@ -131,11 +121,10 @@ class _$_MainStateData implements _MainStateData {
 }
 
 abstract class _MainStateData implements MainStateData {
-  const factory _MainStateData({final Map<String, Map<String, String>>? code}) =
-      _$_MainStateData;
+  const factory _MainStateData({final String? code}) = _$_MainStateData;
 
   @override
-  Map<String, Map<String, String>>? get code;
+  String? get code;
   @override
   @JsonKey(ignore: true)
   _$$_MainStateDataCopyWith<_$_MainStateData> get copyWith =>
